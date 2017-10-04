@@ -1,6 +1,7 @@
 <resources>
-    <string name="app_name">CYSTR</string>
+    <string name="app_name">Cybonix Solutions Trainer - CYSTR</string>
     <string name="button3">Best Free Computer Cleaner</string>
     <string name="button4">Best Free Antivirus</string>
     <string name="button5">Best Free Spyware Protection</string>
+    <string name="textView">These Videos Apply To All Windows Vista and Higher.</string>
 </resources>
