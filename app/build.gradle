@@ -1,0 +1,55 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    compileSdk 33
+
+    // Specify the namespace for your app or library
+    namespace "com.cybonixsolutions.cybonixsolutionstrainer__cystr"
+
+    defaultConfig {
+        // applicationId can be inferred from the namespace
+        minSdk 23
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            // Minify and optimize the code in release builds
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        // Ensure the app is compiled using Java 8 features
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        // Compile Kotlin code to target Java 8 JVM
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+    // Kotlin and core libraries
+    implementation 'androidx.core:core-ktx:1.8.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.9.0'
+
+    // YouTube API client library (Replace with the correct version & naming)
+    implementation 'com.google.apis:youtube:v3-revNNN-MMdd-yyyy'  // <-- Check this
+
+    // Unit testing dependencies
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+}
