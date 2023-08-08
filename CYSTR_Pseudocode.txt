@@ -1,0 +1,92 @@
+Create Application CYSTR:
+
+  Define Class MainActivity:
+
+    Initialize videoList as empty list
+    Initialize recyclerView as null
+    Initialize videoAdapter as null
+    Initialize apiKey as your YouTube API key
+
+    Function OnCreate:
+      Initialize UI elements (recyclerView, searchBar)
+      Initialize videoAdapter with empty list and attach to recyclerView
+      Initialize apiKey with stored key
+      Async call function loadVideosFromYouTubeAPI
+      Set click listener on searchBar to call function searchVideos
+
+    Async Function loadVideosFromYouTubeAPI:
+      If rate limit exceeded for apiKey:
+        Show error message to user
+        Return
+      Try:
+        Fetch video data from YouTube API using apiKey
+      Catch networkError:
+        Show error message to the user
+        Return
+      If no data or error:
+        Show error message to user
+        Return
+      For each videoData in fetched data:
+        Create a new Video object with videoData
+        Add the new Video to videoList
+      Update videoAdapter with the updated videoList
+
+    Function searchVideos:
+      Get search query from searchBar
+      If search query is empty:
+        Show warning message
+      Else:
+        Filter videoList where video title or description contains search query
+        Update videoAdapter with filtered list
+
+  End Class MainActivity
+
+  Define Class VideoPlayerActivity:
+
+    Initialize videoPlayer as null
+    Initialize currentVideo as null
+    Initialize playButton as null
+    Initialize pauseButton as null
+    Initialize rewindButton as null
+    Initialize fastForwardButton as null
+    
+    Function OnCreate:
+      Initialize UI elements (videoPlayer, playButton, pauseButton, rewindButton, fastForwardButton)
+      Get selected video from intent
+      If selected video is null:
+        Show error message
+        Close VideoPlayerActivity
+      Else:
+        Set currentVideo to the selected video
+        Try:
+          Initialize videoPlayer with currentVideo
+        Catch videoError:
+          Show error message to the user
+        Set click listener on playButton to call function OnPlayButtonPress
+        Set click listener on pauseButton to call function OnPauseButtonPress
+        Set click listener on rewindButton to call function OnRewindButtonPress
+        Set click listener on fastForwardButton to call function OnFastForwardButtonPress
+
+    Function OnPlayButtonPress:
+      If videoPlayer is not null and not playing:
+        Play currentVideo
+
+    Function OnPauseButtonPress:
+      If videoPlayer is not null and is playing:
+        Pause currentVideo
+
+    Function OnRewindButtonPress:
+      If videoPlayer is not null:
+        Rewind currentVideo by 10 seconds
+
+    Function OnFastForwardButtonPress:
+      If videoPlayer is not null:
+        Fast forward currentVideo by 10 seconds
+
+    Function OnVideoEnd:
+      If videoPlayer is not null:
+        Show a replay button and other suggested videos
+
+  End Class VideoPlayerActivity
+
+End Application CYSTR
