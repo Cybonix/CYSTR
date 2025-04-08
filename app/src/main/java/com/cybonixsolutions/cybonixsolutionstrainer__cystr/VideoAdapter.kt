@@ -57,9 +57,11 @@ class VideoAdapter(private val videoList: MutableList<Video> = mutableListOf()) 
     override fun onBindViewHolder(holder: VideoViewHolder, position: Int) {
         val currentVideo = videoList[position]
 
-        // Load video thumbnail using Glide
+        // Load video thumbnail using Glide with placeholder and error handling
         Glide.with(holder.itemView.context)
             .load(currentVideo.thumbnailUrl)
+            .placeholder(android.R.drawable.ic_menu_gallery) // Default placeholder
+            .error(android.R.drawable.ic_menu_report_image) // Error image if loading fails
             .into(holder.thumbnailImageView)
 
         holder.titleTextView.text = currentVideo.title

@@ -2,6 +2,7 @@ package com.cybonixsolutions.cybonixsolutionstrainer__cystr
 
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.MediaController
 import android.widget.Toast
@@ -53,9 +54,15 @@ class VideoPlayerActivity : AppCompatActivity() {
             mediaController.setAnchorView(videoPlayer)
             videoPlayer?.setMediaController(mediaController)
             
-            // Set the video for the player
-            videoPlayer?.setVideoURI(Uri.parse(video.videoUrl))
-            videoPlayer?.requestFocus()
+            try {
+                // Set the video for the player
+                videoPlayer?.setVideoURI(Uri.parse(video.videoUrl))
+                videoPlayer?.requestFocus()
+            } catch (e: Exception) {
+                // Handle invalid URL or other issues
+                Toast.makeText(this, "Error loading video: ${e.message}", Toast.LENGTH_LONG).show()
+                Log.e("VideoPlayerActivity", "Error setting video URI: ${e.message}", e)
+            }
             
             // Set up loading listener
             videoPlayer?.setOnPreparedListener { mp ->

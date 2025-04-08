@@ -114,7 +114,12 @@ class MainActivity : AppCompatActivity() {
                 val searchResults = searchResponse.items
                 
                 // Convert search results to Video objects
-                val fetchedVideos = convertToVideoList(searchResults)
+                val fetchedVideos = if (searchResults.isNullOrEmpty()) {
+                    // Fallback to sample videos if no results or API key issues
+                    createSampleVideos()
+                } else {
+                    convertToVideoList(searchResults)
+                }
                 
                 withContext(Dispatchers.Main) {
                     updateVideos(fetchedVideos)
@@ -122,7 +127,9 @@ class MainActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 Log.e(TAG, "Error fetching videos: ${e.message}", e)
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@MainActivity, "Error fetching videos: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainActivity, "Loading sample videos due to API error: ${e.message}", Toast.LENGTH_SHORT).show()
+                    // Load sample videos as fallback
+                    updateVideos(createSampleVideos())
                 }
             }
         }
@@ -159,6 +166,50 @@ class MainActivity : AppCompatActivity() {
         videoList.clear()
         videoList.addAll(newVideos)
         videoAdapter.notifyDataSetChanged()
+    }
+    
+    /**
+     * Creates sample videos for testing when YouTube API is not available.
+     * @return A list of sample Video objects.
+     */
+    private fun createSampleVideos(): List<Video> {
+        return listOf(
+            Video(
+                id = "sample1",
+                title = "How to Fix a Slow Computer",
+                description = "Learn how to speed up your computer with these simple tips and tricks.",
+                thumbnailUrl = "https://i.ytimg.com/vi/dummyvideo1/maxresdefault.jpg",
+                videoUrl = "https://www.youtube.com/watch?v=dummyvideo1"
+            ),
+            Video(
+                id = "sample2",
+                title = "Computer Won't Boot? Here's How to Fix It",
+                description = "Troubleshooting guide for when your computer won't start up properly.",
+                thumbnailUrl = "https://i.ytimg.com/vi/dummyvideo2/maxresdefault.jpg",
+                videoUrl = "https://www.youtube.com/watch?v=dummyvideo2"
+            ),
+            Video(
+                id = "sample3",
+                title = "Fixing Blue Screen of Death Errors",
+                description = "Step-by-step guide to diagnose and fix the dreaded Blue Screen of Death.",
+                thumbnailUrl = "https://i.ytimg.com/vi/dummyvideo3/maxresdefault.jpg",
+                videoUrl = "https://www.youtube.com/watch?v=dummyvideo3"
+            ),
+            Video(
+                id = "sample4",
+                title = "How to Remove Malware from Your PC",
+                description = "Complete guide to identifying and removing malicious software from your computer.",
+                thumbnailUrl = "https://i.ytimg.com/vi/dummyvideo4/maxresdefault.jpg",
+                videoUrl = "https://www.youtube.com/watch?v=dummyvideo4"
+            ),
+            Video(
+                id = "sample5",
+                title = "Upgrading Your Computer's RAM",
+                description = "Learn how to upgrade your computer's memory for better performance.",
+                thumbnailUrl = "https://i.ytimg.com/vi/dummyvideo5/maxresdefault.jpg",
+                videoUrl = "https://www.youtube.com/watch?v=dummyvideo5"
+            )
+        )
     }
 
     /**
