@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
 
     // Constants
     companion object {
-        const val YOUTUBE_API_KEY = "YOUR_YOUTUBE_API_KEY"
+        const val YOUTUBE_API_KEY = "AIzaSyDoCG9pIYcftKDfsQY3AhDgTEKTp8XVXVQ"
         private const val MAX_RESULTS = 25
         private const val TAG = "MainActivity"
         
@@ -102,10 +102,10 @@ class MainActivity : AppCompatActivity() {
                 ).setApplicationName("CYSTR").build()
                 
                 // Build the search request
-                val searchRequest = youtube.search().list("snippet")
+                val searchRequest = youtube.search().list(listOf("snippet"))
                 searchRequest.key = YOUTUBE_API_KEY
                 searchRequest.q = DEFAULT_QUERY
-                searchRequest.type = "video"
+                searchRequest.type = listOf("video")
                 searchRequest.maxResults = MAX_RESULTS.toLong()
                 searchRequest.fields = "items(id/videoId,snippet/title,snippet/description,snippet/thumbnails/high/url)"
                 

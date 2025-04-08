@@ -25,11 +25,17 @@ class VideoPlayerActivity : AppCompatActivity() {
         setContentView(R.layout.activity_video_player)
 
         // Get the video from the intent or finish the activity if no video was passed.
-        currentVideo = intent.getParcelableExtra("selected_video")
+        @Suppress("DEPRECATION")
+        currentVideo = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableExtra("selected_video", Video::class.java)
+        } else {
+            intent.getParcelableExtra("selected_video")
+        }
+        
         currentVideo?.let {
             initializeVideoPlayer(it)
         } ?: run {
-            Toast.makeText(this, "Error: No video selected!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.no_video_selected), Toast.LENGTH_SHORT).show()
             finish()
         }
     }

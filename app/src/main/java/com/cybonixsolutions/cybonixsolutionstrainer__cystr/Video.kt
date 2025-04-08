@@ -1,7 +1,7 @@
 package com.cybonixsolutions.cybonixsolutionstrainer__cystr
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 /**
  * Represents a single video entity with properties.
