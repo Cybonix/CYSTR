@@ -1,10 +1,17 @@
 package com.cybonixsolutions.cybonixsolutionstrainer__cystr
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport
+import com.google.api.client.json.jackson2.JacksonFactory
+import com.google.api.services.youtube.YouTube
+import com.google.api.services.youtube.model.SearchResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,6 +25,11 @@ class MainActivity : AppCompatActivity() {
     // Constants
     companion object {
         const val YOUTUBE_API_KEY = "YOUR_YOUTUBE_API_KEY"
+        private const val MAX_RESULTS = 25
+        private const val TAG = "MainActivity"
+        
+        // Query to fetch computer troubleshooting videos
+        private const val DEFAULT_QUERY = "computer troubleshooting tutorial"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +47,18 @@ class MainActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recyclerView)
         val searchBar: SearchView = findViewById(R.id.searchBar)
 
+        // Set up RecyclerView with layout manager
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        
+        // Initialize adapter with click listener
         videoAdapter = VideoAdapter(videoList)
+        videoAdapter.onVideoClickListener = object : VideoAdapter.OnVideoClickListener {
+            override fun onVideoClick(position: Int) {
+                val video = videoList[position]
+                navigateToVideoPlayer(video)
+            }
+        }
+        
         recyclerView.adapter = videoAdapter
 
         searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -52,6 +75,16 @@ class MainActivity : AppCompatActivity() {
             }
         })
     }
+    
+    /**
+     * Navigate to the VideoPlayerActivity with the selected video.
+     * @param video The video to be played.
+     */
+    private fun navigateToVideoPlayer(video: Video) {
+        val intent = Intent(this, VideoPlayerActivity::class.java)
+        intent.putExtra("selected_video", video)
+        startActivity(intent)
+    }
 
     /**
      * Fetches video data from the YouTube API using the specified API key.
@@ -61,17 +94,60 @@ class MainActivity : AppCompatActivity() {
     private fun fetchVideosFromYouTubeAPI() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                // TODO: Implement the logic to fetch video data from YouTube API using YOUTUBE_API_KEY.
-                val fetchedVideos = mutableListOf<Video>()  // Example: fetched from API.
-
+                // Initialize the YouTube object
+                val youtube = YouTube.Builder(
+                    GoogleNetHttpTransport.newTrustedTransport(),
+                    JacksonFactory.getDefaultInstance(),
+                    null
+                ).setApplicationName("CYSTR").build()
+                
+                // Build the search request
+                val searchRequest = youtube.search().list("snippet")
+                searchRequest.key = YOUTUBE_API_KEY
+                searchRequest.q = DEFAULT_QUERY
+                searchRequest.type = "video"
+                searchRequest.maxResults = MAX_RESULTS.toLong()
+                searchRequest.fields = "items(id/videoId,snippet/title,snippet/description,snippet/thumbnails/high/url)"
+                
+                // Execute the search request
+                val searchResponse = searchRequest.execute()
+                val searchResults = searchResponse.items
+                
+                // Convert search results to Video objects
+                val fetchedVideos = convertToVideoList(searchResults)
+                
                 withContext(Dispatchers.Main) {
                     updateVideos(fetchedVideos)
                 }
             } catch (e: Exception) {
+                Log.e(TAG, "Error fetching videos: ${e.message}", e)
                 withContext(Dispatchers.Main) {
                     Toast.makeText(this@MainActivity, "Error fetching videos: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
             }
+        }
+    }
+    
+    /**
+     * Converts a list of YouTube search results to a list of Video objects.
+     * @param searchResults The search results from YouTube API.
+     * @return A list of Video objects.
+     */
+    private fun convertToVideoList(searchResults: List<SearchResult>): List<Video> {
+        return searchResults.map { searchResult ->
+            val videoId = searchResult.id.videoId
+            val title = searchResult.snippet.title
+            val description = searchResult.snippet.description
+            val thumbnailUrl = searchResult.snippet.thumbnails.high.url
+            val videoUrl = "https://www.youtube.com/watch?v=$videoId"
+            
+            Video(
+                id = videoId,
+                title = title,
+                description = description,
+                thumbnailUrl = thumbnailUrl,
+                videoUrl = videoUrl
+            )
         }
     }
 

@@ -3,11 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Permissions -->
+    <!-- Internet permission is required for YouTube API -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Network state permission for checking connectivity -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- Allows the app to write to external storage, used for storing downloaded videos -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <!-- If you're reading from external storage, consider adding the below permission:
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    -->
 
     <application
         android:allowBackup="true"

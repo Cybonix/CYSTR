@@ -11,10 +11,7 @@ import com.bumptech.glide.Glide
 /**
  * VideoAdapter is a RecyclerView adapter to display a list of videos.
  */
-class VideoAdapter : RecyclerView.Adapter<VideoAdapter.VideoViewHolder>() {
-
-    // List of videos to be displayed
-    private val videoList = mutableListOf<Video>()
+class VideoAdapter(private val videoList: MutableList<Video> = mutableListOf()) : RecyclerView.Adapter<VideoAdapter.VideoViewHolder>() {
 
     // Interface for click listener
     interface OnVideoClickListener {

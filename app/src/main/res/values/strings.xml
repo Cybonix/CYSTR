@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Cybonix Solutions Trainer -- CYSTR</string>
+    <string name="search_hint">Search for troubleshooting videos</string>
+    <string name="play">Play</string>
+    <string name="pause">Pause</string>
+    <string name="rewind">Rewind</string>
+    <string name="fast_forward">Fast Forward</string>
+    <string name="replay">Replay</string>
+    <string name="no_video_selected">Error: No video selected!</string>
+    <string name="fetch_error">Error fetching videos: %1$s</string>
+    <string name="video_ended">Video ended. Tap Play to replay</string>
 </resources>

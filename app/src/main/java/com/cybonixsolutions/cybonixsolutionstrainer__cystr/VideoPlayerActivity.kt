@@ -1,10 +1,13 @@
 package com.cybonixsolutions.cybonixsolutionstrainer__cystr
 
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.widget.Button
+import android.widget.MediaController
 import android.widget.Toast
 import android.widget.VideoView
 import android.net.Uri
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 
 class VideoPlayerActivity : AppCompatActivity() {
@@ -38,17 +41,45 @@ class VideoPlayerActivity : AppCompatActivity() {
     private fun initializeVideoPlayer(video: Video) {
         videoPlayer = findViewById(R.id.videoView)
 
-        // Set the video for the player
-        videoPlayer?.setVideoURI(Uri.parse(video.videoUrl))
-        videoPlayer?.requestFocus()
+        try {
+            // Set up media controller for standard playback controls
+            val mediaController = MediaController(this)
+            mediaController.setAnchorView(videoPlayer)
+            videoPlayer?.setMediaController(mediaController)
+            
+            // Set the video for the player
+            videoPlayer?.setVideoURI(Uri.parse(video.videoUrl))
+            videoPlayer?.requestFocus()
+            
+            // Set up loading listener
+            videoPlayer?.setOnPreparedListener { mp ->
+                // Hide custom controls initially if using MediaController
+                Toast.makeText(this, "Video ready to play", Toast.LENGTH_SHORT).show()
+                mp.start() // Auto-start playback
+            }
+            
+            // Set up error listener
+            videoPlayer?.setOnErrorListener { _, what, extra ->
+                Toast.makeText(
+                    this,
+                    "Error during playback. Error code: $what, $extra",
+                    Toast.LENGTH_LONG
+                ).show()
+                true // Error handled
+            }
 
-        // Set listeners for the player controls.
-        findViewById<Button>(R.id.playButton).setOnClickListener { onPlayButtonPress() }
-        findViewById<Button>(R.id.pauseButton).setOnClickListener { onPauseButtonPress() }
-        findViewById<Button>(R.id.rewindButton).setOnClickListener { onRewindButtonPress() }
-        findViewById<Button>(R.id.fastForwardButton).setOnClickListener { onFastForwardButtonPress() }
+            // Set listeners for the custom player controls
+            findViewById<Button>(R.id.playButton).setOnClickListener { onPlayButtonPress() }
+            findViewById<Button>(R.id.pauseButton).setOnClickListener { onPauseButtonPress() }
+            findViewById<Button>(R.id.rewindButton).setOnClickListener { onRewindButtonPress() }
+            findViewById<Button>(R.id.fastForwardButton).setOnClickListener { onFastForwardButtonPress() }
 
-        videoPlayer?.setOnCompletionListener { onVideoEnd() }
+            videoPlayer?.setOnCompletionListener { onVideoEnd() }
+            
+        } catch (e: Exception) {
+            Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+            finish()
+        }
     }
 
     /** Play the video if it isn't already playing. */
@@ -81,8 +112,20 @@ class VideoPlayerActivity : AppCompatActivity() {
         }
     }
 
-    /** Handle video completion, implement replay or other functionalities here. */
+    /** Handle video completion, showing a replay button. */
     private fun onVideoEnd() {
-        // TODO: Implement replay or other functionalities here.
+        // Show a Toast message for replay option
+        Toast.makeText(this, getString(R.string.video_ended), Toast.LENGTH_SHORT).show()
+        
+        // Add an option to replay the video
+        findViewById<Button>(R.id.playButton).apply {
+            text = getString(R.string.replay)
+            setOnClickListener { 
+                videoPlayer?.seekTo(0)
+                videoPlayer?.start()
+                text = getString(R.string.play)
+                setOnClickListener { onPlayButtonPress() }
+            }
+        }
     }
 }
