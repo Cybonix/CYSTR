@@ -32,19 +32,23 @@ The Cybonix Solutions Trainer (CYSTR) is an Android application designed to prov
     *   Open Android Studio and select "Open an existing Android Studio project".
     *   Navigate to the cloned repository and select the `build.gradle` file.
 3.  **Set up YouTube API Key**:
-    *   The project uses a hardcoded API key which has been provided for demonstration purposes. For production use, it is highly recommended to replace this with a secure method of storing your API key.
-    *   The API key is located in `app/src/main/java/com/cybonixsolutions/cybonixsolutionstrainer__cystr/MainActivity.kt`.
+    *   Create a file named `local.properties` in the root directory of the project.
+    *   Add your YouTube API key to this file:
+        ```
+        YOUTUBE_API_KEY="YOUR_API_KEY"
+        ```
+    *   Replace `YOUR_API_KEY` with your actual YouTube Data API key.
 4.  **Build and Run**:
     *   Build the project using the "Build" menu in Android Studio.
     *   Run the app on an Android emulator or a physical device.
 
 ## Security Note
 
-The YouTube API key is hardcoded in `MainActivity.kt`. This is a security risk as it exposes the key in the client-side code. It is strongly recommended to store the API key securely, for example, by adding it to a `local.properties` file and accessing it through `BuildConfig`.
+The YouTube API key is loaded from a `local.properties` file, which is included in the `.gitignore` file and should not be checked into version control. This prevents the API key from being exposed in the client-side code.
 
 ## Future Improvements
 
-*   **Secure API Key Storage**: Implement a secure method for storing the YouTube API key, such as using `local.properties` and `BuildConfig`.
+*   **Secure API Key Storage**: The API key is now stored in `local.properties`, which is a good practice for development. For production apps, consider using more advanced techniques like storing the key in a secure backend or using obfuscation with ProGuard/R8.
 *   **Enhanced Video Player**: Replace the `VideoView` with a more robust video player library. Previously, [ExoPlayer](https.github.com/google/ExoPlayer) was a recommended option, but it is now deprecated and has been merged into [AndroidX Media3](https://github.com/androidx/media). All new development should use AndroidX Media3 for better support and more features.
 *   **Improved UI/UX**: Enhance the user interface with better layouts, animations, and a more modern design.
 *   **Pagination**: Implement pagination for loading more videos as the user scrolls, instead of loading a fixed number of videos at once.

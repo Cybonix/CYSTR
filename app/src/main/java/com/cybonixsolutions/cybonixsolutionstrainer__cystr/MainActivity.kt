@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
 
     // Constants
     companion object {
-        const val YOUTUBE_API_KEY = "AIzaSyDoCG9pIYcftKDfsQY3AhDgTEKTp8XVXVQ"
+        const val YOUTUBE_API_KEY = BuildConfig.YOUTUBE_API_KEY
         private const val MAX_RESULTS = 25
         private const val TAG = "MainActivity"
         
