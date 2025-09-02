@@ -45,7 +45,7 @@ The YouTube API key is hardcoded in `MainActivity.kt`. This is a security risk a
 ## Future Improvements
 
 *   **Secure API Key Storage**: Implement a secure method for storing the YouTube API key, such as using `local.properties` and `BuildConfig`.
-*   **Enhanced Video Player**: Replace the `VideoView` with a more robust video player library like [ExoPlayer](https://github.com/google/ExoPlayer) to support more video formats and provide a better user experience.
+*   **Enhanced Video Player**: Replace the `VideoView` with a more robust video player library. Previously, [ExoPlayer](https.github.com/google/ExoPlayer) was a recommended option, but it is now deprecated and has been merged into [AndroidX Media3](https://github.com/androidx/media). All new development should use AndroidX Media3 for better support and more features.
 *   **Improved UI/UX**: Enhance the user interface with better layouts, animations, and a more modern design.
 *   **Pagination**: Implement pagination for loading more videos as the user scrolls, instead of loading a fixed number of videos at once.
 *   **Error Handling**: Improve error handling for network requests and video playback to provide more informative feedback to the user.
