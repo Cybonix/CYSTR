@@ -5,7 +5,17 @@ plugins {
 }
 
 android {
+    def localProperties = new java.util.Properties()
+    def localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        localProperties.load(localPropertiesFile.newInputStream())
+    }
+
     compileSdk 33
+
+    buildFeatures {
+        buildConfig true
+    }
 
     // Specify the namespace for your app or library
     namespace "com.cybonixsolutions.cybonixsolutionstrainer__cystr"
@@ -16,6 +26,7 @@ android {
         targetSdk 33
         versionCode 1
         versionName "1.0"
+        buildConfigField("String", "YOUTUBE_API_KEY", "\"" + localProperties.getProperty("YOUTUBE_API_KEY") + "\"")
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
